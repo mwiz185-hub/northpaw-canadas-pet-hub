@@ -192,6 +192,7 @@ export type Database = {
           organization_name: string | null
           updated_at: string
           user_type: string
+          verified: boolean
         }
         Insert: {
           city?: string | null
@@ -201,6 +202,7 @@ export type Database = {
           organization_name?: string | null
           updated_at?: string
           user_type: string
+          verified?: boolean
         }
         Update: {
           city?: string | null
@@ -210,6 +212,7 @@ export type Database = {
           organization_name?: string | null
           updated_at?: string
           user_type?: string
+          verified?: boolean
         }
         Relationships: []
       }
