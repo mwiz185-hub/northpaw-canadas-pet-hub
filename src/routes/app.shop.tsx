@@ -83,9 +83,14 @@ function ShopPage() {
               <h3 className="text-sm font-bold leading-tight">{p.name}</h3>
               <p className="truncate text-xs text-muted-foreground">{p.breed}{p.age ? ` · ${p.age}y` : ""}</p>
               <p className="flex items-center gap-1 truncate text-[11px] font-medium">
-                <BadgeCheck className="h-3 w-3 text-primary" />
-                {p.profiles?.organization_name || p.profiles?.display_name || "Store"}
+                {p.profiles?.verified && (
+                  <span title="Verified pet store" className="inline-flex items-center gap-0.5 text-primary">
+                    <BadgeCheck className="h-3 w-3" />
+                  </span>
+                )}
+                <span className="truncate">{p.profiles?.organization_name || p.profiles?.display_name || "Store"}</span>
               </p>
+
               <p className="flex items-center gap-1 truncate text-[11px] text-muted-foreground"><MapPin className="h-3 w-3" />{p.city}</p>
               <button onClick={() => inquire(p)}
                 className="mt-2 w-full rounded-lg bg-primary py-2 text-xs font-semibold text-primary-foreground">
