@@ -21,10 +21,14 @@ function AdoptPage() {
 
   useEffect(() => {
     (async () => {
-      const { data } = await supabase.from("pets")
-        .select("*, profiles:owner_id(organization_name, display_name)")
+      const { data: pets } = await supabase.from("pets").select("*")
         .eq("show_in_adoption", true).order("created_at", { ascending: false });
-      setItems((data ?? []) as Listing[]);
+      const ownerIds = Array.from(new Set((pets ?? []).map((p) => p.owner_id)));
+      const { data: profs } = ownerIds.length
+        ? await supabase.from("profiles").select("id, organization_name, display_name").in("id", ownerIds)
+        : { data: [] as { id: string; organization_name: string | null; display_name: string | null }[] };
+      const map = new Map(profs!.map((p) => [p.id, p]));
+      setItems((pets ?? []).map((p) => ({ ...p, profiles: map.get(p.owner_id) ?? null })) as unknown as Listing[]);
       setLoading(false);
     })();
   }, []);

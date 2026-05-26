@@ -22,10 +22,14 @@ function ShopPage() {
 
   useEffect(() => {
     (async () => {
-      const { data } = await supabase.from("pets")
-        .select("*, profiles:owner_id(organization_name, display_name, user_type)")
+      const { data: pets } = await supabase.from("pets").select("*")
         .eq("show_in_marketplace", true).order("created_at", { ascending: false });
-      setItems((data ?? []) as Listing[]);
+      const ownerIds = Array.from(new Set((pets ?? []).map((p) => p.owner_id)));
+      const { data: profs } = ownerIds.length
+        ? await supabase.from("profiles").select("id, organization_name, display_name, user_type").in("id", ownerIds)
+        : { data: [] as { id: string; organization_name: string | null; display_name: string | null; user_type: string }[] };
+      const map = new Map(profs!.map((p) => [p.id, p]));
+      setItems((pets ?? []).map((p) => ({ ...p, profiles: map.get(p.owner_id) ?? null })) as unknown as Listing[]);
       setLoading(false);
     })();
   }, []);
