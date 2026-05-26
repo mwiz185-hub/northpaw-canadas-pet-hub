@@ -11,7 +11,7 @@ type Listing = {
   id: string; name: string; breed: string | null; age: number | null;
   city: string | null; photos: string[]; price: number | null;
   owner_id: string;
-  profiles?: { organization_name: string | null; display_name: string | null; user_type: string } | null;
+  profiles?: { organization_name: string | null; display_name: string | null; user_type: string; verified: boolean } | null;
 };
 
 function ShopPage() {
@@ -26,13 +26,14 @@ function ShopPage() {
         .eq("show_in_marketplace", true).order("created_at", { ascending: false });
       const ownerIds = Array.from(new Set((pets ?? []).map((p) => p.owner_id)));
       const { data: profs } = ownerIds.length
-        ? await supabase.from("profiles").select("id, organization_name, display_name, user_type").in("id", ownerIds)
-        : { data: [] as { id: string; organization_name: string | null; display_name: string | null; user_type: string }[] };
+        ? await supabase.from("profiles").select("id, organization_name, display_name, user_type, verified").in("id", ownerIds)
+        : { data: [] as { id: string; organization_name: string | null; display_name: string | null; user_type: string; verified: boolean }[] };
       const map = new Map(profs!.map((p) => [p.id, p]));
       setItems((pets ?? []).map((p) => ({ ...p, profiles: map.get(p.owner_id) ?? null })) as unknown as Listing[]);
       setLoading(false);
     })();
   }, []);
+
 
   async function inquire(p: Listing) {
     if (!user) return;
@@ -82,9 +83,14 @@ function ShopPage() {
               <h3 className="text-sm font-bold leading-tight">{p.name}</h3>
               <p className="truncate text-xs text-muted-foreground">{p.breed}{p.age ? ` · ${p.age}y` : ""}</p>
               <p className="flex items-center gap-1 truncate text-[11px] font-medium">
-                <BadgeCheck className="h-3 w-3 text-primary" />
-                {p.profiles?.organization_name || p.profiles?.display_name || "Store"}
+                {p.profiles?.verified && (
+                  <span title="Verified pet store" className="inline-flex items-center gap-0.5 text-primary">
+                    <BadgeCheck className="h-3 w-3" />
+                  </span>
+                )}
+                <span className="truncate">{p.profiles?.organization_name || p.profiles?.display_name || "Store"}</span>
               </p>
+
               <p className="flex items-center gap-1 truncate text-[11px] text-muted-foreground"><MapPin className="h-3 w-3" />{p.city}</p>
               <button onClick={() => inquire(p)}
                 className="mt-2 w-full rounded-lg bg-primary py-2 text-xs font-semibold text-primary-foreground">
