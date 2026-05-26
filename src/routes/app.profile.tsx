@@ -29,6 +29,8 @@ function ProfilePage() {
   const [pet, setPet] = useState<Pet>(EMPTY);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [toggleSaved, setToggleSaved] = useState(false);
+  const toggleTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (!user) return;
