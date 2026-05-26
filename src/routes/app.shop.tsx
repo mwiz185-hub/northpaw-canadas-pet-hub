@@ -11,7 +11,7 @@ type Listing = {
   id: string; name: string; breed: string | null; age: number | null;
   city: string | null; photos: string[]; price: number | null;
   owner_id: string;
-  profiles?: { organization_name: string | null; display_name: string | null; user_type: string } | null;
+  profiles?: { organization_name: string | null; display_name: string | null; user_type: string; verified: boolean } | null;
 };
 
 function ShopPage() {
@@ -26,13 +26,14 @@ function ShopPage() {
         .eq("show_in_marketplace", true).order("created_at", { ascending: false });
       const ownerIds = Array.from(new Set((pets ?? []).map((p) => p.owner_id)));
       const { data: profs } = ownerIds.length
-        ? await supabase.from("profiles").select("id, organization_name, display_name, user_type").in("id", ownerIds)
-        : { data: [] as { id: string; organization_name: string | null; display_name: string | null; user_type: string }[] };
+        ? await supabase.from("profiles").select("id, organization_name, display_name, user_type, verified").in("id", ownerIds)
+        : { data: [] as { id: string; organization_name: string | null; display_name: string | null; user_type: string; verified: boolean }[] };
       const map = new Map(profs!.map((p) => [p.id, p]));
       setItems((pets ?? []).map((p) => ({ ...p, profiles: map.get(p.owner_id) ?? null })) as unknown as Listing[]);
       setLoading(false);
     })();
   }, []);
+
 
   async function inquire(p: Listing) {
     if (!user) return;
