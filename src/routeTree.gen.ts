@@ -16,7 +16,10 @@ import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppSwipeRouteImport } from './routes/app.swipe'
 import { Route as AppShopRouteImport } from './routes/app.shop'
+import { Route as AppProfileRouteImport } from './routes/app.profile'
+import { Route as AppMatchesRouteImport } from './routes/app.matches'
 import { Route as AppAdoptRouteImport } from './routes/app.adopt'
+import { Route as AppChatConversationIdRouteImport } from './routes/app.chat.$conversationId'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -53,9 +56,24 @@ const AppShopRoute = AppShopRouteImport.update({
   path: '/shop',
   getParentRoute: () => AppRoute,
 } as any)
+const AppProfileRoute = AppProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMatchesRoute = AppMatchesRouteImport.update({
+  id: '/matches',
+  path: '/matches',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppAdoptRoute = AppAdoptRouteImport.update({
   id: '/adopt',
   path: '/adopt',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppChatConversationIdRoute = AppChatConversationIdRouteImport.update({
+  id: '/chat/$conversationId',
+  path: '/chat/$conversationId',
   getParentRoute: () => AppRoute,
 } as any)
 
@@ -66,8 +84,11 @@ export interface FileRoutesByFullPath {
   '/onboarding': typeof OnboardingRoute
   '/signup': typeof SignupRoute
   '/app/adopt': typeof AppAdoptRoute
+  '/app/matches': typeof AppMatchesRoute
+  '/app/profile': typeof AppProfileRoute
   '/app/shop': typeof AppShopRoute
   '/app/swipe': typeof AppSwipeRoute
+  '/app/chat/$conversationId': typeof AppChatConversationIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -76,8 +97,11 @@ export interface FileRoutesByTo {
   '/onboarding': typeof OnboardingRoute
   '/signup': typeof SignupRoute
   '/app/adopt': typeof AppAdoptRoute
+  '/app/matches': typeof AppMatchesRoute
+  '/app/profile': typeof AppProfileRoute
   '/app/shop': typeof AppShopRoute
   '/app/swipe': typeof AppSwipeRoute
+  '/app/chat/$conversationId': typeof AppChatConversationIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -87,8 +111,11 @@ export interface FileRoutesById {
   '/onboarding': typeof OnboardingRoute
   '/signup': typeof SignupRoute
   '/app/adopt': typeof AppAdoptRoute
+  '/app/matches': typeof AppMatchesRoute
+  '/app/profile': typeof AppProfileRoute
   '/app/shop': typeof AppShopRoute
   '/app/swipe': typeof AppSwipeRoute
+  '/app/chat/$conversationId': typeof AppChatConversationIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -99,8 +126,11 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/signup'
     | '/app/adopt'
+    | '/app/matches'
+    | '/app/profile'
     | '/app/shop'
     | '/app/swipe'
+    | '/app/chat/$conversationId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -109,8 +139,11 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/signup'
     | '/app/adopt'
+    | '/app/matches'
+    | '/app/profile'
     | '/app/shop'
     | '/app/swipe'
+    | '/app/chat/$conversationId'
   id:
     | '__root__'
     | '/'
@@ -119,8 +152,11 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/signup'
     | '/app/adopt'
+    | '/app/matches'
+    | '/app/profile'
     | '/app/shop'
     | '/app/swipe'
+    | '/app/chat/$conversationId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -182,6 +218,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppShopRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/profile': {
+      id: '/app/profile'
+      path: '/profile'
+      fullPath: '/app/profile'
+      preLoaderRoute: typeof AppProfileRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/matches': {
+      id: '/app/matches'
+      path: '/matches'
+      fullPath: '/app/matches'
+      preLoaderRoute: typeof AppMatchesRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/adopt': {
       id: '/app/adopt'
       path: '/adopt'
@@ -189,19 +239,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAdoptRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/chat/$conversationId': {
+      id: '/app/chat/$conversationId'
+      path: '/chat/$conversationId'
+      fullPath: '/app/chat/$conversationId'
+      preLoaderRoute: typeof AppChatConversationIdRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
   AppAdoptRoute: typeof AppAdoptRoute
+  AppMatchesRoute: typeof AppMatchesRoute
+  AppProfileRoute: typeof AppProfileRoute
   AppShopRoute: typeof AppShopRoute
   AppSwipeRoute: typeof AppSwipeRoute
+  AppChatConversationIdRoute: typeof AppChatConversationIdRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppAdoptRoute: AppAdoptRoute,
+  AppMatchesRoute: AppMatchesRoute,
+  AppProfileRoute: AppProfileRoute,
   AppShopRoute: AppShopRoute,
   AppSwipeRoute: AppSwipeRoute,
+  AppChatConversationIdRoute: AppChatConversationIdRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
@@ -216,3 +279,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
