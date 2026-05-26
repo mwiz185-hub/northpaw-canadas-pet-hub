@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.prevent_self_verify() FROM PUBLIC, anon, authenticated;
