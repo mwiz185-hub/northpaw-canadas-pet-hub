@@ -64,32 +64,61 @@ function ProfilePage() {
   }
 
   async function savePet() {
-    if (!user) return;
-    if (!pet.name.trim()) { toast.error("Pet needs a name"); return; }
+    if (!user) {
+      toast.error("You must be signed in");
+      return;
+    }
+    if (!pet.name.trim()) {
+      toast.error("Pet needs a name");
+      return;
+    }
     setSaving(true);
-    const payload = {
-      owner_id: user.id,
-      name: pet.name.trim(),
-      species: pet.species,
-      breed: pet.breed || null,
-      age: pet.age === "" ? null : Number(pet.age),
-      gender: pet.gender || null,
-      city: pet.city,
-      bio: pet.bio || null,
-      description: pet.description || null,
-      price: pet.price === "" ? null : Number(pet.price),
-      photos: pet.photos,
-      show_in_mating: pet.show_in_mating,
-      show_in_adoption: pet.show_in_adoption,
-      show_in_marketplace: pet.show_in_marketplace,
-    };
-    const { error, data } = pet.id
-      ? await supabase.from("pets").update(payload).eq("id", pet.id).select().single()
-      : await supabase.from("pets").insert(payload).select().single();
-    setSaving(false);
-    if (error) { toast.error(error.message); return; }
-    setPet((p) => ({ ...p, id: data.id }));
-    toast.success("Pet profile saved");
+    try {
+      const payload = {
+        owner_id: user.id,
+        name: pet.name.trim(),
+        species: pet.species,
+        breed: pet.breed || null,
+        age: pet.age === "" ? null : Number(pet.age),
+        gender: pet.gender || null,
+        city: pet.city,
+        bio: pet.bio || null,
+        description: pet.description || null,
+        price: pet.price === "" ? null : Number(pet.price),
+        photos: pet.photos,
+        show_in_mating: pet.show_in_mating,
+        show_in_adoption: pet.show_in_adoption,
+        show_in_marketplace: pet.show_in_marketplace,
+      };
+
+      if (pet.id) {
+        const { data, error } = await supabase
+          .from("pets")
+          .update(payload)
+          .eq("id", pet.id)
+          .eq("owner_id", user.id)
+          .select()
+          .maybeSingle();
+        if (error) throw error;
+        if (!data) throw new Error("No pet was updated (check permissions)");
+        setPet((p) => ({ ...p, id: data.id }));
+      } else {
+        const { data, error } = await supabase
+          .from("pets")
+          .insert(payload)
+          .select()
+          .maybeSingle();
+        if (error) throw error;
+        if (!data) throw new Error("Failed to create pet");
+        setPet((p) => ({ ...p, id: data.id }));
+      }
+      toast.success("Pet profile saved");
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Failed to save pet profile";
+      toast.error(message);
+    } finally {
+      setSaving(false);
+    }
   }
 
   async function signOut() {
