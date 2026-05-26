@@ -224,9 +224,18 @@ function ProfilePage() {
         )}
 
         <div className="mt-4 space-y-2">
-          <Toggle label="Show in Mating" value={pet.show_in_mating} onChange={(v) => setPet({ ...pet, show_in_mating: v })} />
-          <Toggle label="Show in Adoption" value={pet.show_in_adoption} onChange={(v) => setPet({ ...pet, show_in_adoption: v })} />
-          <Toggle label="Show in Marketplace" value={pet.show_in_marketplace} onChange={(v) => setPet({ ...pet, show_in_marketplace: v })} />
+          <div className="flex items-center justify-between">
+            <Toggle label="Show in Mating" value={pet.show_in_mating} onChange={(v) => { setPet({ ...pet, show_in_mating: v }); autoSaveToggles({ show_in_mating: v }); }} />
+            {toggleSaved && <Check className="h-4 w-4 text-green-500" />}
+          </div>
+          <div className="flex items-center justify-between">
+            <Toggle label="Show in Adoption" value={pet.show_in_adoption} onChange={(v) => { setPet({ ...pet, show_in_adoption: v }); autoSaveToggles({ show_in_adoption: v }); }} />
+            {toggleSaved && <Check className="h-4 w-4 text-green-500" />}
+          </div>
+          <div className="flex items-center justify-between">
+            <Toggle label="Show in Marketplace" value={pet.show_in_marketplace} onChange={(v) => { setPet({ ...pet, show_in_marketplace: v }); autoSaveToggles({ show_in_marketplace: v }); }} />
+            {toggleSaved && <Check className="h-4 w-4 text-green-500" />}
+          </div>
         </div>
 
         <button onClick={savePet} disabled={saving}
