@@ -125,6 +125,8 @@ function ProfilePage() {
 
   const autoSaveToggles = useCallback(async (updates: Partial<Pick<Pet, "show_in_mating" | "show_in_adoption" | "show_in_marketplace">>) => {
     if (!user || !pet.id) return;
+    const petId = pet.id;
+    const ownerId = user.id;
     setToggleSaved(false);
     if (toggleTimer.current) clearTimeout(toggleTimer.current);
     toggleTimer.current = setTimeout(async () => {
@@ -132,8 +134,8 @@ function ProfilePage() {
         const { error } = await supabase
           .from("pets")
           .update(updates)
-          .eq("id", pet.id)
-          .eq("owner_id", user.id);
+          .eq("id", petId)
+          .eq("owner_id", ownerId);
         if (error) throw error;
         setToggleSaved(true);
         toggleTimer.current = setTimeout(() => setToggleSaved(false), 2000);
