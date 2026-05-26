@@ -62,8 +62,8 @@ function ChatPage() {
     if (error) toast.error(error.message);
   }
 
-  const isSeller = !!(user && conv && conv.context_pet_id && conv.kind !== "mating");
-  // Seller check refined below using pet owner — but we already require context_pet_id; verify via RLS at insert.
+  // "match" = mating swipe conversation (no purchase). Only adoption/marketplace can be marked as purchased.
+  const isSeller = !!(user && conv && conv.context_pet_id && (conv.kind === "adoption" || conv.kind === "marketplace"));
   const canMarkPurchased = isSeller && !sale;
 
   function openModal() {
