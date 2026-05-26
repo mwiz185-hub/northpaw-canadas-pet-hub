@@ -1,9 +1,9 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 import { Logo } from "@/components/Logo";
-import { LogOut, Plus, X, ImagePlus } from "lucide-react";
+import { LogOut, Plus, X, ImagePlus, Check } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/app/profile")({ component: ProfilePage });
@@ -29,6 +29,8 @@ function ProfilePage() {
   const [pet, setPet] = useState<Pet>(EMPTY);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [toggleSaved, setToggleSaved] = useState(false);
+  const toggleTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (!user) return;
@@ -121,6 +123,29 @@ function ProfilePage() {
     }
   }
 
+  const autoSaveToggles = useCallback(async (updates: Partial<Pick<Pet, "show_in_mating" | "show_in_adoption" | "show_in_marketplace">>) => {
+    if (!user || !pet.id) return;
+    const petId = pet.id;
+    const ownerId = user.id;
+    setToggleSaved(false);
+    if (toggleTimer.current) clearTimeout(toggleTimer.current);
+    toggleTimer.current = setTimeout(async () => {
+      try {
+        const { error } = await supabase
+          .from("pets")
+          .update(updates)
+          .eq("id", petId)
+          .eq("owner_id", ownerId);
+        if (error) throw error;
+        setToggleSaved(true);
+        toggleTimer.current = setTimeout(() => setToggleSaved(false), 2000);
+      } catch (err) {
+        const message = err instanceof Error ? err.message : "Failed to update visibility";
+        toast.error(message);
+      }
+    }, 400);
+  }, [user, pet.id]);
+
   async function signOut() {
     await supabase.auth.signOut();
     navigate({ to: "/" });
@@ -199,9 +224,18 @@ function ProfilePage() {
         )}
 
         <div className="mt-4 space-y-2">
-          <Toggle label="Show in Mating" value={pet.show_in_mating} onChange={(v) => setPet({ ...pet, show_in_mating: v })} />
-          <Toggle label="Show in Adoption" value={pet.show_in_adoption} onChange={(v) => setPet({ ...pet, show_in_adoption: v })} />
-          <Toggle label="Show in Marketplace" value={pet.show_in_marketplace} onChange={(v) => setPet({ ...pet, show_in_marketplace: v })} />
+          <div className="flex items-center justify-between">
+            <Toggle label="Show in Mating" value={pet.show_in_mating} onChange={(v) => { setPet({ ...pet, show_in_mating: v }); autoSaveToggles({ show_in_mating: v }); }} />
+            {toggleSaved && <Check className="h-4 w-4 text-green-500" />}
+          </div>
+          <div className="flex items-center justify-between">
+            <Toggle label="Show in Adoption" value={pet.show_in_adoption} onChange={(v) => { setPet({ ...pet, show_in_adoption: v }); autoSaveToggles({ show_in_adoption: v }); }} />
+            {toggleSaved && <Check className="h-4 w-4 text-green-500" />}
+          </div>
+          <div className="flex items-center justify-between">
+            <Toggle label="Show in Marketplace" value={pet.show_in_marketplace} onChange={(v) => { setPet({ ...pet, show_in_marketplace: v }); autoSaveToggles({ show_in_marketplace: v }); }} />
+            {toggleSaved && <Check className="h-4 w-4 text-green-500" />}
+          </div>
         </div>
 
         <button onClick={savePet} disabled={saving}
