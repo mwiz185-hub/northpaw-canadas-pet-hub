@@ -79,9 +79,10 @@ function Signup() {
   );
 }
 
-function Field({ label, value, onChange, ...rest }: {
+type FieldProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange" | "value"> & {
   label: string; value: string; onChange: (v: string) => void;
-} & React.InputHTMLAttributes<HTMLInputElement>) {
+};
+function Field({ label, value, onChange, ...rest }: FieldProps) {
   return (
     <label className="block">
       <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{label}</span>
