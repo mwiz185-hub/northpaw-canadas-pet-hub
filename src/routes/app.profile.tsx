@@ -123,6 +123,27 @@ function ProfilePage() {
     }
   }
 
+  const autoSaveToggles = useCallback(async (updates: Partial<Pick<Pet, "show_in_mating" | "show_in_adoption" | "show_in_marketplace">>) => {
+    if (!user || !pet.id) return;
+    setToggleSaved(false);
+    if (toggleTimer.current) clearTimeout(toggleTimer.current);
+    toggleTimer.current = setTimeout(async () => {
+      try {
+        const { error } = await supabase
+          .from("pets")
+          .update(updates)
+          .eq("id", pet.id)
+          .eq("owner_id", user.id);
+        if (error) throw error;
+        setToggleSaved(true);
+        toggleTimer.current = setTimeout(() => setToggleSaved(false), 2000);
+      } catch (err) {
+        const message = err instanceof Error ? err.message : "Failed to update visibility";
+        toast.error(message);
+      }
+    }, 400);
+  }, [user, pet.id]);
+
   async function signOut() {
     await supabase.auth.signOut();
     navigate({ to: "/" });
