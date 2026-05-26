@@ -213,6 +213,42 @@ export type Database = {
         }
         Relationships: []
       }
+      sales: {
+        Row: {
+          buyer_id: string
+          commission: number
+          conversation_id: string
+          created_at: string
+          id: string
+          kind: string
+          pet_id: string
+          sale_price: number
+          seller_id: string
+        }
+        Insert: {
+          buyer_id: string
+          commission: number
+          conversation_id: string
+          created_at?: string
+          id?: string
+          kind: string
+          pet_id: string
+          sale_price: number
+          seller_id: string
+        }
+        Update: {
+          buyer_id?: string
+          commission?: number
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          kind?: string
+          pet_id?: string
+          sale_price?: number
+          seller_id?: string
+        }
+        Relationships: []
+      }
       swipes: {
         Row: {
           created_at: string
