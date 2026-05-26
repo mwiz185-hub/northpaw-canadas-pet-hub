@@ -37,23 +37,45 @@ function AdoptPage() {
   async function inquire(p: Listing) {
     if (!user) return;
     if (p.owner_id === user.id) { toast.info("This is your own listing"); return; }
-    const { data: existing } = await supabase.from("conversations").select("id")
-      .eq("kind", "adoption").eq("context_pet_id", p.id)
-      .or(`and(user_a_id.eq.${user.id},user_b_id.eq.${p.owner_id}),and(user_a_id.eq.${p.owner_id},user_b_id.eq.${user.id})`)
-      .maybeSingle();
-    let convId = existing?.id;
+
+    const { data: existing } = await supabase
+      .from("conversations")
+      .select("id, user_a_id, user_b_id")
+      .eq("kind", "adoption")
+      .eq("context_pet_id", p.id)
+      .or(`user_a_id.eq.${user.id},user_b_id.eq.${user.id}`);
+
+    let convId: string | undefined;
+    if (existing && existing.length > 0) {
+      const match = existing.find(
+        (c) =>
+          (c.user_a_id === user.id && c.user_b_id === p.owner_id) ||
+          (c.user_b_id === user.id && c.user_a_id === p.owner_id)
+      );
+      if (match) convId = match.id;
+    }
+
     if (!convId) {
-      const { data: created, error } = await supabase.from("conversations").insert({
-        user_a_id: user.id, user_b_id: p.owner_id, context_pet_id: p.id, kind: "adoption",
-      }).select("id").single();
+      const { data: created, error } = await supabase
+        .from("conversations")
+        .insert({
+          user_a_id: user.id,
+          user_b_id: p.owner_id,
+          context_pet_id: p.id,
+          kind: "adoption",
+        })
+        .select("id")
+        .single();
       if (error) { toast.error(error.message); return; }
       convId = created.id;
       await supabase.from("messages").insert({
-        conversation_id: convId, sender_id: user.id,
+        conversation_id: convId,
+        sender_id: user.id,
         body: `Hi! I'm interested in adopting ${p.name}.`,
       });
     }
-    navigate({ to: "/app/matches" });
+
+    navigate({ to: "/app/chat/$conversationId", params: { conversationId: convId } });
   }
 
   if (loading) return <Center>Loading adoptable pets…</Center>;
