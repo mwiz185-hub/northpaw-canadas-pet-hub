@@ -14,7 +14,247 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      conversations: {
+        Row: {
+          context_pet_id: string | null
+          created_at: string
+          id: string
+          kind: string
+          user_a_id: string
+          user_b_id: string
+        }
+        Insert: {
+          context_pet_id?: string | null
+          created_at?: string
+          id?: string
+          kind: string
+          user_a_id: string
+          user_b_id: string
+        }
+        Update: {
+          context_pet_id?: string | null
+          created_at?: string
+          id?: string
+          kind?: string
+          user_a_id?: string
+          user_b_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversations_context_pet_id_fkey"
+            columns: ["context_pet_id"]
+            isOneToOne: false
+            referencedRelation: "pets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      matches: {
+        Row: {
+          created_at: string
+          id: string
+          pet_a_id: string
+          pet_b_id: string
+          user_a_id: string
+          user_b_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          pet_a_id: string
+          pet_b_id: string
+          user_a_id: string
+          user_b_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          pet_a_id?: string
+          pet_b_id?: string
+          user_a_id?: string
+          user_b_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "matches_pet_a_id_fkey"
+            columns: ["pet_a_id"]
+            isOneToOne: false
+            referencedRelation: "pets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "matches_pet_b_id_fkey"
+            columns: ["pet_b_id"]
+            isOneToOne: false
+            referencedRelation: "pets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      messages: {
+        Row: {
+          body: string
+          conversation_id: string
+          created_at: string
+          id: string
+          sender_id: string
+        }
+        Insert: {
+          body: string
+          conversation_id: string
+          created_at?: string
+          id?: string
+          sender_id: string
+        }
+        Update: {
+          body?: string
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pets: {
+        Row: {
+          age: number | null
+          bio: string | null
+          breed: string | null
+          city: string | null
+          created_at: string
+          description: string | null
+          gender: string | null
+          id: string
+          name: string
+          owner_id: string
+          photos: string[]
+          price: number | null
+          show_in_adoption: boolean
+          show_in_marketplace: boolean
+          show_in_mating: boolean
+          species: string
+          updated_at: string
+        }
+        Insert: {
+          age?: number | null
+          bio?: string | null
+          breed?: string | null
+          city?: string | null
+          created_at?: string
+          description?: string | null
+          gender?: string | null
+          id?: string
+          name: string
+          owner_id: string
+          photos?: string[]
+          price?: number | null
+          show_in_adoption?: boolean
+          show_in_marketplace?: boolean
+          show_in_mating?: boolean
+          species?: string
+          updated_at?: string
+        }
+        Update: {
+          age?: number | null
+          bio?: string | null
+          breed?: string | null
+          city?: string | null
+          created_at?: string
+          description?: string | null
+          gender?: string | null
+          id?: string
+          name?: string
+          owner_id?: string
+          photos?: string[]
+          price?: number | null
+          show_in_adoption?: boolean
+          show_in_marketplace?: boolean
+          show_in_mating?: boolean
+          species?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          city: string | null
+          created_at: string
+          display_name: string | null
+          id: string
+          organization_name: string | null
+          updated_at: string
+          user_type: string
+        }
+        Insert: {
+          city?: string | null
+          created_at?: string
+          display_name?: string | null
+          id: string
+          organization_name?: string | null
+          updated_at?: string
+          user_type: string
+        }
+        Update: {
+          city?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          organization_name?: string | null
+          updated_at?: string
+          user_type?: string
+        }
+        Relationships: []
+      }
+      swipes: {
+        Row: {
+          created_at: string
+          direction: string
+          id: string
+          swiper_pet_id: string
+          swiper_user_id: string
+          target_pet_id: string
+        }
+        Insert: {
+          created_at?: string
+          direction: string
+          id?: string
+          swiper_pet_id: string
+          swiper_user_id: string
+          target_pet_id: string
+        }
+        Update: {
+          created_at?: string
+          direction?: string
+          id?: string
+          swiper_pet_id?: string
+          swiper_user_id?: string
+          target_pet_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "swipes_swiper_pet_id_fkey"
+            columns: ["swiper_pet_id"]
+            isOneToOne: false
+            referencedRelation: "pets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "swipes_target_pet_id_fkey"
+            columns: ["target_pet_id"]
+            isOneToOne: false
+            referencedRelation: "pets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
