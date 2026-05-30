@@ -5,7 +5,19 @@ import { useAuth } from "@/lib/auth-context";
 import { Heart, X, MapPin, PartyPopper, PawPrint } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/app/swipe")({ component: SwipePage });
+export const Route = createFileRoute("/app/swipe")({
+  head: () => ({
+    meta: [
+      { title: "Find a Mate — NorthPaw" },
+      { name: "description", content: "Swipe through Calgary pets and find the perfect match for yours." },
+      { property: "og:title", content: "Find a Mate — NorthPaw" },
+      { property: "og:description", content: "Swipe through Calgary pets and find the perfect match for yours." },
+      { property: "og:url", content: "https://northpaw-canadas-pet-hub.lovable.app/app/swipe" },
+    ],
+    links: [{ rel: "canonical", href: "https://northpaw-canadas-pet-hub.lovable.app/app/swipe" }],
+  }),
+  component: SwipePage,
+});
 
 type Pet = {
   id: string; name: string; breed: string | null; age: number | null;
@@ -99,6 +111,7 @@ function SwipePage() {
 
   return (
     <div className="px-4 pt-4">
+      <h1 className="sr-only">Find a Mate</h1>
       <div className="relative mx-auto aspect-[3/4] w-full max-w-sm overflow-hidden rounded-3xl bg-card shadow-[var(--shadow-elegant)]">
         {top.photos[0] ? (
           <img src={top.photos[0]} alt={top.name} className="h-full w-full object-cover" />
@@ -115,11 +128,11 @@ function SwipePage() {
       </div>
 
       <div className="mt-6 flex items-center justify-center gap-8">
-        <button onClick={() => swipe("pass")}
+        <button onClick={() => swipe("pass")} aria-label={`Pass on ${top.name}`}
           className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-border bg-card text-muted-foreground shadow-[var(--shadow-card)] transition-transform active:scale-90">
           <X className="h-7 w-7" />
         </button>
-        <button onClick={() => swipe("like")}
+        <button onClick={() => swipe("like")} aria-label={`Like ${top.name}`}
           className="flex h-20 w-20 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-[var(--shadow-elegant)] transition-transform active:scale-90">
           <Heart className="h-9 w-9 fill-current" />
         </button>
