@@ -6,6 +6,15 @@ import { Logo } from "@/components/Logo";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/onboarding")({
+  head: () => ({
+    meta: [
+      { title: "Welcome — NorthPaw" },
+      { name: "description", content: "Set up your NorthPaw profile to get started." },
+      { name: "robots", content: "noindex" },
+      { property: "og:url", content: "https://northpaw-canadas-pet-hub.lovable.app/onboarding" },
+    ],
+    links: [{ rel: "canonical", href: "https://northpaw-canadas-pet-hub.lovable.app/onboarding" }],
+  }),
   component: () => (
     <AuthProvider>
       <Onboarding />
