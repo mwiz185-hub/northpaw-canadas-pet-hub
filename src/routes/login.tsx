@@ -4,7 +4,19 @@ import { supabase } from "@/integrations/supabase/client";
 import { Logo } from "@/components/Logo";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/login")({ component: Login });
+export const Route = createFileRoute("/login")({
+  head: () => ({
+    meta: [
+      { title: "Log In — NorthPaw" },
+      { name: "description", content: "Sign in to your NorthPaw account to swipe, adopt, and shop." },
+      { property: "og:title", content: "Log In — NorthPaw" },
+      { property: "og:description", content: "Sign in to your NorthPaw account." },
+      { property: "og:url", content: "https://northpaw-canadas-pet-hub.lovable.app/login" },
+    ],
+    links: [{ rel: "canonical", href: "https://northpaw-canadas-pet-hub.lovable.app/login" }],
+  }),
+  component: Login,
+});
 
 function Login() {
   const navigate = useNavigate();
