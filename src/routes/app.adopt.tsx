@@ -5,7 +5,29 @@ import { useAuth } from "@/lib/auth-context";
 import { MapPin, PawPrint } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/app/adopt")({ component: AdoptPage });
+export const Route = createFileRoute("/app/adopt")({
+  head: () => ({
+    meta: [
+      { title: "Pet Adoption — NorthPaw" },
+      { name: "description", content: "Browse adoptable pets from Calgary shelters and rescues on NorthPaw." },
+      { property: "og:title", content: "Find Your Next Pet on NorthPaw" },
+      { property: "og:description", content: "Adoptable pets from Calgary shelters and rescues." },
+      { property: "og:url", content: "https://northpaw-canadas-pet-hub.lovable.app/app/adopt" },
+    ],
+    links: [{ rel: "canonical", href: "https://northpaw-canadas-pet-hub.lovable.app/app/adopt" }],
+    scripts: [{
+      type: "application/ld+json",
+      children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        name: "Pet Adoption — NorthPaw",
+        description: "Adoptable pets from Calgary shelters and rescues.",
+        url: "https://northpaw-canadas-pet-hub.lovable.app/app/adopt",
+      }),
+    }],
+  }),
+  component: AdoptPage,
+});
 
 type Listing = {
   id: string; name: string; breed: string | null; age: number | null;

@@ -6,7 +6,19 @@ import { Logo } from "@/components/Logo";
 import { LogOut, Plus, X, ImagePlus, Check } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/app/profile")({ component: ProfilePage });
+export const Route = createFileRoute("/app/profile")({
+  head: () => ({
+    meta: [
+      { title: "Your Profile — NorthPaw" },
+      { name: "description", content: "Manage your NorthPaw pet profile, photos, and visibility across mating, adoption, and marketplace." },
+      { property: "og:title", content: "Your Profile — NorthPaw" },
+      { property: "og:description", content: "Manage your NorthPaw pet profile, photos, and visibility." },
+      { property: "og:url", content: "https://northpaw-canadas-pet-hub.lovable.app/app/profile" },
+    ],
+    links: [{ rel: "canonical", href: "https://northpaw-canadas-pet-hub.lovable.app/app/profile" }],
+  }),
+  component: ProfilePage,
+});
 
 type Pet = {
   id?: string; name: string; species: string; breed: string; age: number | "";
@@ -153,6 +165,7 @@ function ProfilePage() {
 
   return (
     <div className="space-y-4 px-4 pt-4">
+      <h1 className="sr-only">Your Profile</h1>
       <header className="rounded-2xl border border-border bg-card p-4 shadow-[var(--shadow-card)]">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -162,7 +175,7 @@ function ProfilePage() {
               <p className="text-xs capitalize text-muted-foreground">{profile?.user_type === "owner" ? "Pet Owner" : profile?.user_type === "shelter" ? "Shelter" : "Pet Store"} · {profile?.city}</p>
             </div>
           </div>
-          <button onClick={signOut} className="rounded-lg p-2 text-muted-foreground hover:bg-muted">
+          <button onClick={signOut} aria-label="Sign out" className="rounded-lg p-2 text-muted-foreground hover:bg-muted">
             <LogOut className="h-4 w-4" />
           </button>
         </div>
@@ -179,6 +192,7 @@ function ProfilePage() {
                 <img src={url} alt="" className="h-full w-full object-cover" />
                 <button
                   onClick={() => setPet((p) => ({ ...p, photos: p.photos.filter((_, idx) => idx !== i) }))}
+                  aria-label={`Remove photo ${i + 1}`}
                   className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-black/70 text-white">
                   <X className="h-3 w-3" />
                 </button>
@@ -261,7 +275,7 @@ function Toggle({ label, value, onChange }: { label: string; value: boolean; onC
   return (
     <label className="flex items-center justify-between gap-3 rounded-xl border border-border bg-background px-3 py-2.5">
       <span className="text-sm font-medium">{label}</span>
-      <button type="button" onClick={() => onChange(!value)}
+      <button type="button" onClick={() => onChange(!value)} role="switch" aria-checked={value} aria-label={label}
         className={`relative h-6 w-11 rounded-full transition-colors ${value ? "bg-primary" : "bg-muted"}`}>
         <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${value ? "translate-x-5" : "translate-x-0.5"}`} />
       </button>

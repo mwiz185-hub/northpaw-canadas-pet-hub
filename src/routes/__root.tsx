@@ -73,23 +73,38 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "NorthPaw -Canada's Pet Community" },
+      { title: "NorthPaw — Canada's Pet Community" },
       { name: "description", content: "Find mates, adopt pets, and shop from verified Canadian pet stores. Calgary's #1 pet app." },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "NorthPaw -Canada's Pet Community" },
-      { property: "og:description", content: "Find mates, adopt pets, and shop from verified Canadian pet stores. Calgary's #1 pet app." },
+      { name: "author", content: "NorthPaw" },
+      { property: "og:site_name", content: "NorthPaw" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
-      { name: "twitter:title", content: "NorthPaw -Canada's Pet Community" },
-      { name: "twitter:description", content: "Find mates, adopt pets, and shop from verified Canadian pet stores. Calgary's #1 pet app." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/8f1e82e0-8471-496b-8a8a-a0a206f40b7f/id-preview-4e193dfc--0abd8c50-9e35-42ad-b1b5-cb4e7f2ad273.lovable.app-1779820120519.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/8f1e82e0-8471-496b-8a8a-a0a206f40b7f/id-preview-4e193dfc--0abd8c50-9e35-42ad-b1b5-cb4e7f2ad273.lovable.app-1779820120519.png" },
     ],
     links: [
       {
         rel: "stylesheet",
         href: appCss,
+      },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "NorthPaw",
+          url: "https://northpaw-canadas-pet-hub.lovable.app",
+          description: "Canada's pet community for mating, adoption, and a verified pet marketplace.",
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "NorthPaw",
+          url: "https://northpaw-canadas-pet-hub.lovable.app",
+        }),
       },
     ],
   }),

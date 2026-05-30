@@ -5,7 +5,29 @@ import { useAuth } from "@/lib/auth-context";
 import { MapPin, PawPrint, BadgeCheck } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/app/shop")({ component: ShopPage });
+export const Route = createFileRoute("/app/shop")({
+  head: () => ({
+    meta: [
+      { title: "Pet Marketplace — NorthPaw" },
+      { name: "description", content: "Shop pets and supplies from verified Canadian pet stores on NorthPaw." },
+      { property: "og:title", content: "Shop Verified Pet Stores on NorthPaw" },
+      { property: "og:description", content: "Pets and supplies from verified Canadian pet stores." },
+      { property: "og:url", content: "https://northpaw-canadas-pet-hub.lovable.app/app/shop" },
+    ],
+    links: [{ rel: "canonical", href: "https://northpaw-canadas-pet-hub.lovable.app/app/shop" }],
+    scripts: [{
+      type: "application/ld+json",
+      children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        name: "Pet Marketplace — NorthPaw",
+        description: "Verified Canadian pet stores listing pets and supplies.",
+        url: "https://northpaw-canadas-pet-hub.lovable.app/app/shop",
+      }),
+    }],
+  }),
+  component: ShopPage,
+});
 
 type Listing = {
   id: string; name: string; breed: string | null; age: number | null;

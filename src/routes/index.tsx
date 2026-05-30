@@ -8,7 +8,15 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "NorthPaw — Canada's Pet Community" },
-      { name: "description", content: "Mating, adoption and pet marketplace for Calgary, Alberta." },
+      { name: "description", content: "Mating, adoption, and a verified pet marketplace for Calgary, Alberta." },
+      { property: "og:title", content: "NorthPaw — Canada's Pet Community" },
+      { property: "og:description", content: "Mating, adoption, and a verified pet marketplace for Calgary, Alberta." },
+      { property: "og:url", content: "https://northpaw-canadas-pet-hub.lovable.app/" },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/8f1e82e0-8471-496b-8a8a-a0a206f40b7f/id-preview-4e193dfc--0abd8c50-9e35-42ad-b1b5-cb4e7f2ad273.lovable.app-1779820120519.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/8f1e82e0-8471-496b-8a8a-a0a206f40b7f/id-preview-4e193dfc--0abd8c50-9e35-42ad-b1b5-cb4e7f2ad273.lovable.app-1779820120519.png" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://northpaw-canadas-pet-hub.lovable.app/" },
     ],
   }),
   component: Index,
@@ -23,12 +31,11 @@ function Index() {
   }, [navigate]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <main className="min-h-screen bg-background">
       <div className="mx-auto flex min-h-screen max-w-md flex-col px-6 pt-16 pb-10">
         <div className="flex flex-col items-center gap-3 text-primary">
           <Logo size={80} />
-          <h1 className="text-3xl font-extrabold tracking-tight text-foreground">NorthPaw</h1>
-          <p className="text-sm font-medium text-muted-foreground">Canada's Pet Community</p>
+          <h1 className="text-3xl font-extrabold tracking-tight text-foreground">NorthPaw — Canada's Pet Community</h1>
         </div>
 
         <div className="mt-12 flex-1 space-y-4">
@@ -52,7 +59,7 @@ function Index() {
           </Link>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
 
