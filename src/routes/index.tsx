@@ -31,12 +31,11 @@ function Index() {
   }, [navigate]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <main className="min-h-screen bg-background">
       <div className="mx-auto flex min-h-screen max-w-md flex-col px-6 pt-16 pb-10">
         <div className="flex flex-col items-center gap-3 text-primary">
           <Logo size={80} />
-          <h1 className="text-3xl font-extrabold tracking-tight text-foreground">NorthPaw</h1>
-          <p className="text-sm font-medium text-muted-foreground">Canada's Pet Community</p>
+          <h1 className="text-3xl font-extrabold tracking-tight text-foreground">NorthPaw — Canada's Pet Community</h1>
         </div>
 
         <div className="mt-12 flex-1 space-y-4">
