@@ -2,6 +2,16 @@
 @source "../src";
 @import "tw-animate-css";
 
+/* Hide the "Edit with Lovable" badge injected by the hosting platform.
+   Covers the known selectors used by Lovable's injected widget. */
+#lovable-badge,
+[id^="lovable-badge"],
+[class*="lovable-badge"],
+a[href*="lovable.dev"][target="_blank"],
+iframe[src*="lovable.dev"][src*="badge"] {
+  display: none !important;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {

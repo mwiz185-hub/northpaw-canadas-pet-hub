@@ -45,13 +45,40 @@ function Signup() {
     navigate({ to: "/onboarding" });
   }
 
+  async function signUpWithGoogle() {
+    setBusy(true);
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/onboarding`,
+        queryParams: { prompt: "select_account" },
+      },
+    });
+    if (error) { toast.error(error.message); setBusy(false); }
+  }
+
   return (
     <div className="mx-auto flex min-h-screen max-w-md flex-col px-6 py-10">
       <Link to="/" className="self-start text-primary"><Logo size={40} /></Link>
       <h1 className="mt-6 text-2xl font-bold text-foreground">Join NorthPaw</h1>
       <p className="text-sm text-muted-foreground">Canada's Pet Community</p>
 
-      <form onSubmit={submit} className="mt-8 space-y-4">
+      <button
+        type="button"
+        onClick={signUpWithGoogle}
+        disabled={busy}
+        className="mt-8 flex w-full items-center justify-center gap-3 rounded-2xl border border-input bg-card px-6 py-3.5 text-base font-semibold text-foreground transition-colors hover:bg-accent disabled:opacity-60"
+      >
+        <GoogleIcon />
+        Continue with Google
+      </button>
+      <div className="my-5 flex items-center gap-3">
+        <div className="h-px flex-1 bg-border" />
+        <span className="text-xs uppercase tracking-wide text-muted-foreground">or</span>
+        <div className="h-px flex-1 bg-border" />
+      </div>
+
+      <form onSubmit={submit} className="space-y-4">
         <div>
           <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">I am a</label>
           <div className="mt-2 grid grid-cols-3 gap-2">
@@ -94,6 +121,17 @@ function Signup() {
 type FieldProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange" | "value"> & {
   label: string; value: string; onChange: (v: string) => void;
 };
+function GoogleIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true">
+      <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8a12 12 0 1 1 7.8-21.1l5.7-5.7A20 20 0 1 0 44 24c0-1.2-.1-2.3-.4-3.5z"/>
+      <path fill="#FF3D00" d="m6.3 14.7 6.6 4.8A12 12 0 0 1 24 12c3 0 5.8 1.2 7.8 3l5.7-5.7A20 20 0 0 0 6.3 14.7z"/>
+      <path fill="#4CAF50" d="M24 44c5.2 0 10-2 13.6-5.2l-6.3-5.3a12 12 0 0 1-18-6.3l-6.5 5A20 20 0 0 0 24 44z"/>
+      <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3a12 12 0 0 1-4.1 5.5l6.3 5.3C41.4 36.1 44 30.6 44 24c0-1.2-.1-2.3-.4-3.5z"/>
+    </svg>
+  );
+}
+
 function Field({ label, value, onChange, ...rest }: FieldProps) {
   return (
     <label className="block">
