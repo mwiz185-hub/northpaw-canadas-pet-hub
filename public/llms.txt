@@ -1,0 +1,11 @@
+# NorthPaw
+
+> Canada's pet community — find mates for your pet, adopt from local Calgary shelters, and shop from verified Canadian pet stores.
+
+NorthPaw is a mobile-first pet app focused on Calgary, Alberta. It combines three experiences: pet mating (swipe-based matching), adoption listings from local shelters, and a marketplace of verified pet stores.
+
+## Pages
+
+- [Home](/): Overview of NorthPaw's mating, adoption, and marketplace features.
+- [Sign up](/signup): Create a NorthPaw account.
+- [Log in](/login): Sign in to an existing account.
