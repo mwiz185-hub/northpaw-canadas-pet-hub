@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Logo } from "@/components/Logo";
 import { toast } from "sonner";
@@ -24,6 +24,17 @@ function Login() {
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
 
+  // If we already have a session (e.g. returning from OAuth redirect),
+  // navigate straight to the app.
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session) {
+        navigate({ to: "/app/swipe" });
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [navigate]);
+
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setBusy(true);
@@ -37,7 +48,9 @@ function Login() {
     setBusy(true);
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: `${window.location.origin}/app/swipe` },
+      // Redirect back to /login so the session is detected here, on an unguarded page,
+      // before we navigate into the protected /app layout.
+      options: { redirectTo: `${window.location.origin}/login` },
     });
     if (error) { toast.error(error.message); setBusy(false); }
   }
