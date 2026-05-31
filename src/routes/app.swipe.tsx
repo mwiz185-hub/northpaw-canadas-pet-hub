@@ -245,12 +245,14 @@ function SwipePage() {
             ))}
           </div>
         )}
-        <button
-          onClick={() => void simulateMatch(myPets[0], myPets[1])}
-          className="w-full rounded-xl border border-primary/40 bg-primary/10 py-2.5 text-sm font-semibold text-primary hover:bg-primary/20"
-        >
-          ✨ Test Match between {myPets[0].name} &amp; {myPets[1].name}
-        </button>
+        {import.meta.env.DEV && (
+          <button
+            onClick={() => void simulateMatch(myPets[0], myPets[1])}
+            className="w-full rounded-xl border border-primary/40 bg-primary/10 py-2.5 text-sm font-semibold text-primary hover:bg-primary/20"
+          >
+            ✨ Test Match between {myPets[0].name} &amp; {myPets[1].name}
+          </button>
+        )}
       </div>
     ) : null;
 
