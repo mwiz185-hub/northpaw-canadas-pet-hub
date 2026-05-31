@@ -29,10 +29,15 @@ function Gate() {
       navigate({ to: "/login" });
       return;
     }
-    supabase.from("profiles").select("id").eq("id", user.id).maybeSingle().then(({ data }) => {
-      if (!data) navigate({ to: "/onboarding" });
-      else setProfileChecked(true);
-    });
+    supabase
+      .from("profiles")
+      .select("id")
+      .eq("id", user.id)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (!data) navigate({ to: "/onboarding" });
+        else setProfileChecked(true);
+      });
   }, [user, loading, navigate]);
 
   if (loading || !user || !profileChecked) {
@@ -50,7 +55,9 @@ function Gate() {
           <Logo size={28} />
           <span className="text-base font-bold tracking-tight text-foreground">NorthPaw</span>
         </Link>
-        <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Calgary, AB</span>
+        <span className="text-[10px] uppercase tracking-widest text-muted-foreground">
+          Calgary, AB
+        </span>
       </header>
       <main className="flex-1 pb-24">
         <Outlet />

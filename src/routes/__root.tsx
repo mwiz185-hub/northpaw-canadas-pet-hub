@@ -74,7 +74,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "NorthPaw — Canada's Pet Community" },
-      { name: "description", content: "Find mates, adopt pets, and shop from verified Canadian pet stores. Calgary's #1 pet app." },
+      {
+        name: "description",
+        content:
+          "Find mates, adopt pets, and shop from verified Canadian pet stores. Calgary's #1 pet app.",
+      },
       { name: "author", content: "NorthPaw" },
       { property: "og:site_name", content: "NorthPaw" },
       { property: "og:type", content: "website" },
@@ -94,7 +98,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "@type": "Organization",
           name: "NorthPaw",
           url: "https://northpaw-canadas-pet-hub.lovable.app",
-          description: "Canada's pet community for mating, adoption, and a verified pet marketplace.",
+          description:
+            "Canada's pet community for mating, adoption, and a verified pet marketplace.",
         }),
       },
       {

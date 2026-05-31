@@ -24,7 +24,10 @@ export function BottomNav() {
                   active ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                <Icon className={`h-5 w-5 ${active ? "fill-primary/20" : ""}`} strokeWidth={active ? 2.4 : 2} />
+                <Icon
+                  className={`h-5 w-5 ${active ? "fill-primary/20" : ""}`}
+                  strokeWidth={active ? 2.4 : 2}
+                />
                 {label}
               </Link>
             </li>
