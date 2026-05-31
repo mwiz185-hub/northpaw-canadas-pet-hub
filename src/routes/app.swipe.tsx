@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
-import { Heart, X, MapPin, PartyPopper, PawPrint, Star } from "lucide-react";
+import { Heart, X, MapPin, PartyPopper, PawPrint, Star, ChevronDown } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/app/swipe")({
@@ -25,51 +25,74 @@ type Pet = {
   bio?: string | null;
 };
 
+type MyPet = { id: string; name: string };
+
 const SWIPE_THRESHOLD = 110;
 
 function SwipePage() {
   const { user } = useAuth();
-  const [myPetId, setMyPetId] = useState<string | null>(null);
+  const [myPets, setMyPets] = useState<MyPet[]>([]);
+  const [activePetId, setActivePetId] = useState<string | null>(null);
   const [deck, setDeck] = useState<Pet[]>([]);
   const [loading, setLoading] = useState(true);
   const [matchedPet, setMatchedPet] = useState<Pet | null>(null);
+  const [showPetPicker, setShowPetPicker] = useState(false);
 
   useEffect(() => {
     if (!user) return;
     (async () => {
-      const { data: myPets } = await supabase
-        .from("pets").select("id").eq("owner_id", user.id).eq("show_in_mating", true).limit(1);
-      const myId = myPets?.[0]?.id ?? null;
-      setMyPetId(myId);
+      const { data: pets } = await supabase
+        .from("pets").select("id, name").eq("owner_id", user.id).eq("show_in_mating", true);
+      const list = (pets ?? []) as MyPet[];
+      setMyPets(list);
+      const firstId = list[0]?.id ?? null;
+      setActivePetId(firstId);
+    })();
+  }, [user]);
 
+  useEffect(() => {
+    if (!user || activePetId === undefined) return;
+    setLoading(true);
+    (async () => {
       let swipedIds: string[] = [];
-      if (myId) {
-        const { data: swipes } = await supabase.from("swipes").select("target_pet_id").eq("swiper_pet_id", myId);
+      if (activePetId) {
+        const { data: swipes } = await supabase.from("swipes").select("target_pet_id").eq("swiper_pet_id", activePetId);
         swipedIds = swipes?.map((s) => s.target_pet_id) ?? [];
       }
 
+      // Exclude only the active pet itself — other pets (even same owner) are shown
       let q = supabase.from("pets").select("*")
-        .eq("show_in_mating", true).neq("owner_id", user.id).limit(40);
+        .eq("show_in_mating", true)
+        .order("created_at", { ascending: false })
+        .limit(40);
+
+      if (activePetId) q = q.neq("id", activePetId);
       if (swipedIds.length) q = q.not("id", "in", `(${swipedIds.join(",")})`);
+
       const { data: candidates } = await q;
       setDeck((candidates ?? []) as Pet[]);
       setLoading(false);
     })();
-  }, [user]);
+  }, [user, activePetId]);
 
   async function recordSwipe(target: Pet, direction: "like" | "pass") {
-    if (!user || !myPetId) return;
-    const { error } = await supabase.from("swipes").insert({
-      swiper_pet_id: myPetId,
+    if (!user || !activePetId) return;
+    const { error: swipeError } = await supabase.from("swipes").insert({
+      swiper_pet_id: activePetId,
       target_pet_id: target.id,
       swiper_user_id: user.id,
       direction,
     });
-    if (error) { toast.error(error.message); return; }
+    if (swipeError) {
+      console.error("[NorthPaw] swipe insert failed:", swipeError);
+      toast.error(swipeError.message);
+      return;
+    }
     if (direction === "like") {
-      const { data: match } = await supabase.from("matches").select("id")
-        .or(`and(pet_a_id.eq.${myPetId},pet_b_id.eq.${target.id}),and(pet_a_id.eq.${target.id},pet_b_id.eq.${myPetId})`)
+      const { data: match, error: matchError } = await supabase.from("matches").select("id")
+        .or(`and(pet_a_id.eq.${activePetId},pet_b_id.eq.${target.id}),and(pet_a_id.eq.${target.id},pet_b_id.eq.${activePetId})`)
         .maybeSingle();
+      if (matchError) console.error("[NorthPaw] match query failed:", matchError);
       if (match) {
         const { data: existing } = await supabase.from("conversations").select("id")
           .eq("kind", "match")
@@ -86,8 +109,48 @@ function SwipePage() {
     }
   }
 
+  async function simulateMatch(petA: MyPet, petB: MyPet) {
+    if (!user) return;
+
+    // Load full pet data for the modal display
+    const { data: petBFull, error: petErr } = await supabase
+      .from("pets").select("*").eq("id", petB.id).maybeSingle();
+    if (petErr || !petBFull) { toast.error("Could not load pet data"); return; }
+
+    // Attempt both swipes silently — trigger will create the match row if DB is set up
+    await supabase.from("swipes").insert({
+      swiper_pet_id: petA.id, target_pet_id: petB.id,
+      swiper_user_id: user.id, direction: "like",
+    });
+    await supabase.from("swipes").insert({
+      swiper_pet_id: petB.id, target_pet_id: petA.id,
+      swiper_user_id: user.id, direction: "like",
+    });
+
+    // Create the conversation directly — this is what powers the chat
+    const { data: existing } = await supabase.from("conversations").select("id")
+      .eq("kind", "match").eq("context_pet_id", petB.id)
+      .or(`user_a_id.eq.${user.id},user_b_id.eq.${user.id}`)
+      .maybeSingle();
+    if (!existing) {
+      const { error: convErr } = await supabase.from("conversations").insert({
+        user_a_id: user.id,
+        user_b_id: user.id,
+        context_pet_id: petB.id,
+        kind: "match",
+      });
+      if (convErr) { toast.error("Chat setup failed: " + convErr.message); return; }
+    }
+
+    // Show the modal — works regardless of trigger state
+    setMatchedPet(petBFull as Pet);
+  }
+
+  const activePet = myPets.find((p) => p.id === activePetId);
+
   if (loading) return <PageState label="Loading…" />;
-  if (!myPetId) {
+
+  if (!activePetId || myPets.length === 0) {
     return (
       <PageState label="">
         <PawPrint className="h-10 w-10 text-primary" />
@@ -101,13 +164,52 @@ function SwipePage() {
       </PageState>
     );
   }
+
+  // Pet selector + Test Match panel — always visible when user has 2+ pets
+  const multiPetPanel = myPets.length > 1 ? (
+    <div className="relative mb-4 space-y-2">
+      <button
+        onClick={() => setShowPetPicker((v) => !v)}
+        className="flex w-full items-center justify-between rounded-xl border border-border bg-card px-4 py-2.5 text-sm font-medium shadow-[var(--shadow-card)]"
+      >
+        <span className="text-muted-foreground">Swiping as</span>
+        <span className="flex items-center gap-1.5 font-semibold text-foreground">
+          {activePet?.name ?? "Select pet"}
+          <ChevronDown className="h-4 w-4 text-muted-foreground" />
+        </span>
+      </button>
+      {showPetPicker && (
+        <div className="absolute left-0 right-0 top-full z-30 mt-1 overflow-hidden rounded-xl border border-border bg-card shadow-[var(--shadow-elegant)]">
+          {myPets.map((p) => (
+            <button
+              key={p.id}
+              onClick={() => { setActivePetId(p.id); setShowPetPicker(false); setDeck([]); }}
+              className={`w-full px-4 py-3 text-left text-sm hover:bg-accent ${p.id === activePetId ? "font-bold text-primary" : ""}`}
+            >
+              {p.name}
+            </button>
+          ))}
+        </div>
+      )}
+      <button
+        onClick={() => void simulateMatch(myPets[0], myPets[1])}
+        className="w-full rounded-xl border border-primary/40 bg-primary/10 py-2.5 text-sm font-semibold text-primary hover:bg-primary/20"
+      >
+        ✨ Test Match between {myPets[0].name} &amp; {myPets[1].name}
+      </button>
+    </div>
+  ) : null;
+
   if (deck.length === 0) {
     return (
-      <PageState label="">
-        <PawPrint className="h-12 w-12 text-primary" />
-        <h2 className="text-lg font-semibold">You're all caught up!</h2>
-        <p className="text-center text-sm text-muted-foreground">No more pets nearby. Check back soon for new furry friends.</p>
-      </PageState>
+      <div className="px-4 pt-4">
+        {multiPetPanel}
+        <PageState label="">
+          <PawPrint className="h-12 w-12 text-primary" />
+          <h2 className="text-lg font-semibold">You're all caught up!</h2>
+          <p className="text-center text-sm text-muted-foreground">No more pets to swipe on. Check back soon!</p>
+        </PageState>
+      </div>
     );
   }
 
@@ -117,6 +219,8 @@ function SwipePage() {
   return (
     <div className="px-4 pt-4 pb-32">
       <h1 className="sr-only">Find a Mate</h1>
+
+      {multiPetPanel}
 
       <div className="relative mx-auto aspect-[3/4] w-full max-w-sm">
         {next && (
