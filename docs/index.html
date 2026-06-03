@@ -9,9 +9,11 @@
   <meta property="og:description" content="Meet matches, find rescues, and shop from verified Canadian pet stores — all in one place." />
   <meta property="og:url" content="https://mwiz185-hub.github.io/northpaw-canadas-pet-hub/" />
   <meta property="og:image" content="https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/8f1e82e0-8471-496b-8a8a-a0a206f40b7f/id-preview-4e193dfc--0abd8c50-9e35-42ad-b1b5-cb4e7f2ad273.lovable.app-1779820120519.png" />
+  <meta property="og:type" content="website" />
   <link rel="canonical" href="https://mwiz185-hub.github.io/northpaw-canadas-pet-hub/" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       background: #f5f7f0;
@@ -19,6 +21,7 @@
       line-height: 1.5;
     }
     a { color: inherit; text-decoration: none; }
+    a:focus-visible, button:focus-visible { outline: 2px solid #2d6a4f; outline-offset: 3px; }
 
     nav {
       background: #fff;
@@ -110,11 +113,13 @@
 
     .waitlist {
       background: #2d6a4f;
-      padding: 40px 24px;
       text-align: center;
     }
+    .waitlist .page {
+      padding: 40px 24px;
+    }
     .waitlist h2 { font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 8px; }
-    .waitlist > p { font-size: 14px; color: rgba(255,255,255,0.75); margin-bottom: 20px; }
+    .waitlist p { font-size: 14px; color: rgba(255,255,255,0.75); margin-bottom: 20px; }
     .waitlist-form { display: flex; gap: 8px; max-width: 340px; margin: 0 auto; }
     .waitlist-form input {
       flex: 1; padding: 12px 14px;
@@ -193,21 +198,23 @@
     </div>
   </section>
 
-  <section class="waitlist" id="waitlist">
+</div><!-- close .page -->
+
+<section class="waitlist" id="waitlist">
+  <div class="page">
     <h2>📱 Mobile app coming soon</h2>
     <p>Be first to know when NorthPaw hits the App Store &amp; Google Play.</p>
     <!-- PASTE YOUR FORMSPREE ID HERE: replace xYOURID with your form ID from formspree.io -->
     <form class="waitlist-form" action="https://formspree.io/f/xYOURID" method="POST">
-      <input type="email" name="email" placeholder="your@email.com" required />
+      <input type="email" name="email" aria-label="Email address" placeholder="your@email.com" required />
       <button type="submit">Notify Me</button>
     </form>
     <p class="waitlist-note">No spam. Unsubscribe any time.</p>
-  </section>
-
-</div>
+  </div>
+</section>
 
 <footer>
-  <span class="copy">© 2025 NorthPaw</span>
+  <span class="copy">© 2026 NorthPaw</span>
   <div class="links">
     <a href="https://northpaw-canadas-pet-hub.lovable.app/privacy">Privacy Policy</a>
     <a href="https://github.com/mwiz185-hub/northpaw-canadas-pet-hub">GitHub</a>
