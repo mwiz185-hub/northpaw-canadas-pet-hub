@@ -54,7 +54,7 @@ function Index() {
 
   return (
     <main className="min-h-screen bg-background">
-      <div className="mx-auto flex min-h-screen max-w-md flex-col">
+      <div className="mx-auto flex max-w-md flex-col">
         {/* Hero */}
         <div className="bg-gradient-to-br from-[#d8ead2] to-background px-6 pb-8 pt-12 text-center">
           <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary shadow-[0_6px_20px_rgba(45,106,79,0.25)]">
@@ -70,13 +70,13 @@ function Index() {
           <div className="flex flex-col gap-3">
             <Link
               to="/signup"
-              className="flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-4 text-base font-semibold text-primary-foreground shadow-[var(--shadow-elegant)] transition-transform active:scale-[0.98]"
+              className="flex items-center justify-center gap-2 rounded-2xl bg-primary px-6 py-4 text-base font-semibold text-primary-foreground shadow-[var(--shadow-elegant)] transition-transform active:scale-[0.98]"
             >
               Get Started — it's free <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
               to="/login"
-              className="block rounded-xl border border-border bg-card px-6 py-4 text-center text-base font-semibold text-foreground"
+              className="block rounded-2xl border border-border bg-card px-6 py-4 text-center text-base font-semibold text-foreground"
             >
               I already have an account
             </Link>
@@ -116,8 +116,7 @@ function Index() {
             📱 Mobile app coming soon
           </p>
           <p className="text-xs leading-relaxed text-primary-foreground/75">
-            Sign up above to be first on the waitlist when we launch on iOS &amp;
-            Android.
+            Sign up above to be first on the waitlist when we launch on iOS & Android.
           </p>
         </div>
       </div>
@@ -129,7 +128,7 @@ function TrustItem({ emoji, label }: { emoji: string; label: string }) {
   return (
     <div className="flex flex-col items-center gap-1">
       <span className="text-base">{emoji}</span>
-      <span className="text-[10px] text-muted-foreground">{label}</span>
+      <span className="text-xs text-muted-foreground">{label}</span>
     </div>
   );
 }
