@@ -17,7 +17,7 @@ export const Route = createFileRoute("/")({
       {
         property: "og:description",
         content:
-          "Meet matches, find rescues, and shop from verified Canadian pet stores — all in one place.",
+          "Meet matches, find rescues, and shop from verified Canadian pet stores — all in one place. Canada-wide.",
       },
       {
         property: "og:url",
