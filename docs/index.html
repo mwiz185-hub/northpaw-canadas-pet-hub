@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NorthPaw — Canada's Pet Community</title>
+  <meta name="description" content="Mating, adoption, and a verified pet marketplace for Canadian pet owners. Canada-wide." />
+  <meta property="og:title" content="NorthPaw — Canada's Pet Community" />
+  <meta property="og:description" content="Meet matches, find rescues, and shop from verified Canadian pet stores — all in one place." />
+  <meta property="og:url" content="https://mwiz185-hub.github.io/northpaw-canadas-pet-hub/" />
+  <meta property="og:image" content="https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/8f1e82e0-8471-496b-8a8a-a0a206f40b7f/id-preview-4e193dfc--0abd8c50-9e35-42ad-b1b5-cb4e7f2ad273.lovable.app-1779820120519.png" />
+  <link rel="canonical" href="https://mwiz185-hub.github.io/northpaw-canadas-pet-hub/" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f5f7f0;
+      color: #1a2e1f;
+      line-height: 1.5;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    nav {
+      background: #fff;
+      border-bottom: 1px solid #e5e9df;
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .nav-logo { font-weight: 800; font-size: 16px; color: #2d6a4f; }
+    .nav-actions { display: flex; gap: 8px; }
+    .btn-outline {
+      font-size: 13px; font-weight: 600; color: #2d6a4f;
+      border: 1.5px solid #2d6a4f; border-radius: 6px;
+      padding: 7px 14px;
+    }
+    .btn-solid {
+      font-size: 13px; font-weight: 600; color: #fff;
+      background: #2d6a4f; border-radius: 6px;
+      padding: 7px 14px;
+    }
+    .btn-outline:hover { background: #f0f7f3; }
+    .btn-solid:hover { background: #245a40; }
+
+    .page { max-width: 640px; margin: 0 auto; }
+
+    .hero {
+      background: linear-gradient(160deg, #d8ead2, #f5f7f0);
+      padding: 56px 24px 40px;
+      text-align: center;
+      border-bottom: 1px solid #dce5d7;
+    }
+    .hero-icon {
+      width: 72px; height: 72px;
+      background: #2d6a4f; border-radius: 22px;
+      margin: 0 auto 20px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 34px;
+      box-shadow: 0 6px 20px rgba(45,106,79,0.25);
+    }
+    .hero h1 { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 10px; }
+    .hero p {
+      font-size: 15px; color: #4a6350;
+      max-width: 380px; margin-left: auto; margin-right: auto;
+      margin-bottom: 28px;
+    }
+    .hero-ctas { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .cta-primary {
+      background: #2d6a4f; color: #fff;
+      font-size: 15px; font-weight: 700;
+      padding: 14px 24px; border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(45,106,79,0.3);
+      display: inline-block;
+    }
+    .cta-primary:hover { background: #245a40; }
+    .cta-secondary {
+      background: #fff; color: #2d6a4f;
+      border: 1.5px solid #2d6a4f;
+      font-size: 15px; font-weight: 700;
+      padding: 14px 24px; border-radius: 10px;
+      display: inline-block;
+    }
+    .cta-secondary:hover { background: #f0f7f3; }
+
+    .features { padding: 36px 24px; border-bottom: 1px solid #dce5d7; }
+    .section-label {
+      font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 1px;
+      color: #2d6a4f; margin-bottom: 16px;
+    }
+    .feature-card {
+      background: #fff; border-radius: 12px;
+      padding: 16px; display: flex; gap: 14px;
+      align-items: flex-start;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+      margin-bottom: 10px;
+    }
+    .feature-icon {
+      width: 46px; height: 46px;
+      background: #e8f0e4; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; flex-shrink: 0;
+    }
+    .feature-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+    .feature-card p { font-size: 13px; color: #4a6350; line-height: 1.5; }
+
+    .waitlist {
+      background: #2d6a4f;
+      padding: 40px 24px;
+      text-align: center;
+    }
+    .waitlist h2 { font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 8px; }
+    .waitlist > p { font-size: 14px; color: rgba(255,255,255,0.75); margin-bottom: 20px; }
+    .waitlist-form { display: flex; gap: 8px; max-width: 340px; margin: 0 auto; }
+    .waitlist-form input {
+      flex: 1; padding: 12px 14px;
+      border: none; border-radius: 8px;
+      font-size: 14px; outline: none;
+    }
+    .waitlist-form button {
+      background: #e07a3a; color: #fff;
+      font-size: 14px; font-weight: 700;
+      padding: 12px 18px; border: none;
+      border-radius: 8px; cursor: pointer;
+      white-space: nowrap;
+    }
+    .waitlist-form button:hover { background: #c8662e; }
+    .waitlist-note { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 10px; }
+
+    footer {
+      background: #1a2e1f;
+      padding: 20px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    footer .copy { font-size: 12px; color: rgba(255,255,255,0.4); }
+    footer .links { display: flex; gap: 16px; }
+    footer .links a { font-size: 12px; color: rgba(255,255,255,0.5); }
+    footer .links a:hover { color: #fff; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo">🐾 NorthPaw</span>
+  <div class="nav-actions">
+    <a href="https://northpaw-canadas-pet-hub.lovable.app" class="btn-outline">Open App</a>
+    <a href="#waitlist" class="btn-solid">Get Notified</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <section class="hero">
+    <div class="hero-icon">🐾</div>
+    <h1>Canada's Pet Community</h1>
+    <p>Meet matches, find rescues, and shop from verified Canadian pet stores — all in one place.</p>
+    <div class="hero-ctas">
+      <a href="https://northpaw-canadas-pet-hub.lovable.app/signup" class="cta-primary">Get Started — it's free →</a>
+      <a href="#waitlist" class="cta-secondary">Join Waitlist</a>
+    </div>
+  </section>
+
+  <section class="features">
+    <p class="section-label">What you can do</p>
+    <div class="feature-card">
+      <div class="feature-icon">🐕</div>
+      <div>
+        <h3>Pet Mating</h3>
+        <p>Swipe through compatible pets near you and connect with their owners to arrange meetings.</p>
+      </div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">❤️</div>
+      <div>
+        <h3>Adoption</h3>
+        <p>Browse rescues from local shelters and give a pet a forever home across Canada.</p>
+      </div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🛒</div>
+      <div>
+        <h3>Marketplace</h3>
+        <p>Shop from verified Canadian pet stores with secure checkout and a 2% community fee.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="waitlist" id="waitlist">
+    <h2>📱 Mobile app coming soon</h2>
+    <p>Be first to know when NorthPaw hits the App Store &amp; Google Play.</p>
+    <!-- PASTE YOUR FORMSPREE ID HERE: replace xYOURID with your form ID from formspree.io -->
+    <form class="waitlist-form" action="https://formspree.io/f/xYOURID" method="POST">
+      <input type="email" name="email" placeholder="your@email.com" required />
+      <button type="submit">Notify Me</button>
+    </form>
+    <p class="waitlist-note">No spam. Unsubscribe any time.</p>
+  </section>
+
+</div>
+
+<footer>
+  <span class="copy">© 2025 NorthPaw</span>
+  <div class="links">
+    <a href="https://northpaw-canadas-pet-hub.lovable.app/privacy">Privacy Policy</a>
+    <a href="https://github.com/mwiz185-hub/northpaw-canadas-pet-hub">GitHub</a>
+  </div>
+</footer>
+
+</body>
+</html>
