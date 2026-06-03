@@ -10,14 +10,19 @@ export const Route = createFileRoute("/")({
       { title: "NorthPaw — Canada's Pet Community" },
       {
         name: "description",
-        content: "Mating, adoption, and a verified pet marketplace for Calgary, Alberta.",
+        content:
+          "Meet matches, find rescues, and shop from verified Canadian pet stores — all in one place. Canada-wide.",
       },
       { property: "og:title", content: "NorthPaw — Canada's Pet Community" },
       {
         property: "og:description",
-        content: "Mating, adoption, and a verified pet marketplace for Calgary, Alberta.",
+        content:
+          "Meet matches, find rescues, and shop from verified Canadian pet stores — all in one place.",
       },
-      { property: "og:url", content: "https://northpaw-canadas-pet-hub.lovable.app/" },
+      {
+        property: "og:url",
+        content: "https://northpaw-canadas-pet-hub.lovable.app/",
+      },
       {
         property: "og:image",
         content:
@@ -29,7 +34,12 @@ export const Route = createFileRoute("/")({
           "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/8f1e82e0-8471-496b-8a8a-a0a206f40b7f/id-preview-4e193dfc--0abd8c50-9e35-42ad-b1b5-cb4e7f2ad273.lovable.app-1779820120519.png",
       },
     ],
-    links: [{ rel: "canonical", href: "https://northpaw-canadas-pet-hub.lovable.app/" }],
+    links: [
+      {
+        rel: "canonical",
+        href: "https://northpaw-canadas-pet-hub.lovable.app/",
+      },
+    ],
   }),
   component: Index,
 });
@@ -44,52 +54,95 @@ function Index() {
 
   return (
     <main className="min-h-screen bg-background">
-      <div className="mx-auto flex min-h-screen max-w-md flex-col px-6 pt-16 pb-10">
-        <div className="flex flex-col items-center gap-3 text-primary">
-          <Logo size={80} />
-          <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
-            NorthPaw — Canada's Pet Community
+      <div className="mx-auto flex min-h-screen max-w-md flex-col">
+        {/* Hero */}
+        <div className="bg-gradient-to-br from-[#d8ead2] to-background px-6 pb-8 pt-12 text-center">
+          <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary shadow-[0_6px_20px_rgba(45,106,79,0.25)]">
+            <Logo size={36} />
+          </div>
+          <h1 className="mb-3 text-2xl font-extrabold tracking-tight text-foreground">
+            Canada's Pet Community
           </h1>
+          <p className="mb-7 text-sm leading-relaxed text-muted-foreground">
+            Meet matches, find rescues, and shop from verified Canadian pet
+            stores — all in one place.
+          </p>
+          <div className="flex flex-col gap-3">
+            <Link
+              to="/signup"
+              className="flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-4 text-base font-semibold text-primary-foreground shadow-[var(--shadow-elegant)] transition-transform active:scale-[0.98]"
+            >
+              Get Started — it's free <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link
+              to="/login"
+              className="block rounded-xl border border-border bg-card px-6 py-4 text-center text-base font-semibold text-foreground"
+            >
+              I already have an account
+            </Link>
+          </div>
         </div>
 
-        <div className="mt-12 flex-1 space-y-4">
+        {/* Trust bar */}
+        <div className="flex justify-around border-b border-t border-border bg-card px-4 py-3">
+          <TrustItem emoji="🐕" label="Mating" />
+          <TrustItem emoji="❤️" label="Adoption" />
+          <TrustItem emoji="🛒" label="Marketplace" />
+          <TrustItem emoji="🇨🇦" label="Canada-wide" />
+        </div>
+
+        {/* Feature cards */}
+        <div className="flex-1 space-y-3 px-6 py-6">
           <Feature
             Icon={PawPrint}
-            title="Mating"
-            body="Swipe to find the perfect match for your pet."
+            title="Pet Mating"
+            body="Swipe through compatible pets near you and connect with their owners to arrange meetings."
           />
           <Feature
             Icon={Heart}
             title="Adoption"
-            body="Bring home a rescue from local Calgary shelters."
+            body="Browse rescues from local shelters and give a pet a forever home across Canada."
           />
           <Feature
             Icon={Store}
             title="Marketplace"
-            body="Shop from verified Canadian pet stores."
+            body="Shop from verified Canadian pet stores with secure checkout."
           />
         </div>
 
-        <div className="space-y-3">
-          <Link
-            to="/signup"
-            className="flex items-center justify-center gap-2 rounded-2xl bg-primary px-6 py-4 text-base font-semibold text-primary-foreground shadow-[var(--shadow-elegant)] transition-transform active:scale-[0.98]"
-          >
-            Get Started <ArrowRight className="h-4 w-4" />
-          </Link>
-          <Link
-            to="/login"
-            className="block rounded-2xl border border-border bg-card px-6 py-4 text-center text-base font-semibold text-foreground"
-          >
-            I already have an account
-          </Link>
+        {/* Mobile waitlist teaser */}
+        <div className="mx-6 mb-8 rounded-2xl bg-primary p-5 text-center">
+          <p className="mb-1 text-sm font-bold text-primary-foreground">
+            📱 Mobile app coming soon
+          </p>
+          <p className="text-xs leading-relaxed text-primary-foreground/75">
+            Sign up above to be first on the waitlist when we launch on iOS &amp;
+            Android.
+          </p>
         </div>
       </div>
     </main>
   );
 }
 
-function Feature({ Icon, title, body }: { Icon: typeof PawPrint; title: string; body: string }) {
+function TrustItem({ emoji, label }: { emoji: string; label: string }) {
+  return (
+    <div className="flex flex-col items-center gap-1">
+      <span className="text-base">{emoji}</span>
+      <span className="text-[10px] text-muted-foreground">{label}</span>
+    </div>
+  );
+}
+
+function Feature({
+  Icon,
+  title,
+  body,
+}: {
+  Icon: typeof PawPrint;
+  title: string;
+  body: string;
+}) {
   return (
     <div className="flex items-start gap-4 rounded-2xl border border-border bg-card p-4 shadow-[var(--shadow-card)]">
       <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent text-primary">
@@ -97,7 +150,7 @@ function Feature({ Icon, title, body }: { Icon: typeof PawPrint; title: string; 
       </div>
       <div>
         <h3 className="text-base font-semibold text-foreground">{title}</h3>
-        <p className="text-sm text-muted-foreground">{body}</p>
+        <p className="text-sm leading-relaxed text-muted-foreground">{body}</p>
       </div>
     </div>
   );
