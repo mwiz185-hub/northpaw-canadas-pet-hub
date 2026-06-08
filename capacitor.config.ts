@@ -3,7 +3,7 @@ import type { CapacitorConfig } from '@capacitor/cli';
 const config: CapacitorConfig = {
   appId: 'ca.northpaw.app',
   appName: 'NorthPaw',
-  webDir: 'dist',
+  webDir: 'dist/mobile',
   plugins: {
     SplashScreen: {
       launchShowDuration: 2000,
